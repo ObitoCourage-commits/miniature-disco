@@ -4,7 +4,18 @@
         <meta http-equiv="Pragma" content="no-cache">
         <meta http-equiv="Expires" content="0">
         <style>
-            body, html { margin: 0; padding: 0; }
+            body, html { 
+                margin: 0; 
+                padding: 0;
+                width: 100%;
+                height: 100%;
+                overflow: hidden;
+                background: black;
+            }
+            #game {
+                width: 100vw;
+                height: 100vh;
+            }
             #loading {
                 position: fixed;
                 top: 0; left: 0;
@@ -41,64 +52,6 @@
             <div id="loadingText">Loading Crash Bandicoot 2... please wait</div>
             <div id="progressBar"><div id="progressFill"></div></div>
         </div>
-        <div style="width:100%;height:100%;max-width:100%">
-            <div id="game"></div>
+        <div style="width:100vw;height:100vh;">
+            <div id="game" style="width:100%;height:100%;"></div>
         </div>
-        <script>
-        async function loadGame() {
-            const parts = [
-                "https://raw.githubusercontent.com/ObitoCourage-commits/miniature-disco/main/Crash%20Bandicoot%202%20-%20Cortex%20Strikes%20Back%20(USA).bin.part01",
-                "https://raw.githubusercontent.com/ObitoCourage-commits/miniature-disco/main/Crash%20Bandicoot%202%20-%20Cortex%20Strikes%20Back%20(USA).bin.part02",
-                "https://raw.githubusercontent.com/ObitoCourage-commits/miniature-disco/main/Crash%20Bandicoot%202%20-%20Cortex%20Strikes%20Back%20(USA).bin.part03",
-                "https://raw.githubusercontent.com/ObitoCourage-commits/miniature-disco/main/Crash%20Bandicoot%202%20-%20Cortex%20Strikes%20Back%20(USA).bin.part04",
-                "https://raw.githubusercontent.com/ObitoCourage-commits/miniature-disco/main/Crash%20Bandicoot%202%20-%20Cortex%20Strikes%20Back%20(USA).bin.part05",
-                "https://raw.githubusercontent.com/ObitoCourage-commits/miniature-disco/main/Crash%20Bandicoot%202%20-%20Cortex%20Strikes%20Back%20(USA).bin.part06",
-                "https://raw.githubusercontent.com/ObitoCourage-commits/miniature-disco/main/Crash%20Bandicoot%202%20-%20Cortex%20Strikes%20Back%20(USA).bin.part07",
-                "https://raw.githubusercontent.com/ObitoCourage-commits/miniature-disco/main/Crash%20Bandicoot%202%20-%20Cortex%20Strikes%20Back%20(USA).bin.part08",
-                "https://raw.githubusercontent.com/ObitoCourage-commits/miniature-disco/main/Crash%20Bandicoot%202%20-%20Cortex%20Strikes%20Back%20(USA).bin.part09",
-                "https://raw.githubusercontent.com/ObitoCourage-commits/miniature-disco/main/Crash%20Bandicoot%202%20-%20Cortex%20Strikes%20Back%20(USA).bin.part10"
-            ];
-
-            const buffers = [];
-            for (let i = 0; i < parts.length; i++) {
-                document.getElementById("loadingText").textContent = `Downloading part ${i + 1} of ${parts.length}...`;
-                document.getElementById("progressFill").style.width = ((i / parts.length) * 100) + "%";
-                const response = await fetch(parts[i]);
-                const buffer = await response.arrayBuffer();
-                buffers.push(buffer);
-            }
-
-            document.getElementById("loadingText").textContent = "Assembling game...";
-            document.getElementById("progressFill").style.width = "100%";
-
-            const totalSize = buffers.reduce((sum, buf) => sum + buf.byteLength, 0);
-            const combined = new Uint8Array(totalSize);
-            let offset = 0;
-            for (const buf of buffers) {
-                combined.set(new Uint8Array(buf), offset);
-                offset += buf.byteLength;
-            }
-
-            const blob = new Blob([combined], {type: "application/octet-stream"});
-            
-            document.getElementById("loading").style.display = "none";
-
-            EJS_player = "#game";
-            EJS_core = "psx";
-            EJS_gameName = "Crash Bandicoot 2: Cortex Strikes Back";
-            EJS_color = "#0064ff";
-            EJS_startOnLoaded = true;
-            EJS_pathtodata = "https://cdn.emulatorjs.org/stable/data/";
-            EJS_loadingText = "Loading... please wait (may take 1-2 mins)";
-            EJS_gameUrl = URL.createObjectURL(blob);
-            EJS_biosUrl = "https://github.com/ObitoCourage-commits/miniature-disco/releases/download/showman/SCPH1001.BIN";
-
-            const script = document.createElement("script");
-            script.src = "https://cdn.emulatorjs.org/stable/data/loader.js";
-            document.body.appendChild(script);
-        }
-
-        loadGame();
-        </script>
-    </body>
-</html>
